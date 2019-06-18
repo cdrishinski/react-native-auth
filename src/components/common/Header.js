@@ -35,5 +35,5 @@ const styles = {
 };
 
 //make compnenet availabe to other parts of the application
-export default Header;
+export { Header };
 
