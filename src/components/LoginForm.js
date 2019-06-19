@@ -8,6 +8,8 @@ class LoginForm extends Component {
     
 onButtonPress() {
     const { email, password } = this.state;
+
+    this.setState({ error: ''})
     
     firebase.auth().signInWithEmailAndPassword(email, password)
         .catch(() => {
@@ -40,7 +42,7 @@ onButtonPress() {
                     />
                 </CardSection>
                 {/* below text tag only populates if there is an error */}
-                <Text style={style.errorTextStyle}>
+                <Text style={styles.errorTextStyle}>
                     {this.state.error}
                 </Text>
 

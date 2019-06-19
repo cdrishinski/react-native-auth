@@ -31,7 +31,7 @@ const styles = {
     },
     labelStyle: {
         fontSize: 18,
-        paddingLef: 20,
+        paddingLeft: 20,
         flex: 1
     },
     containerStyle: {
