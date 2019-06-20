@@ -1,23 +1,57 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import firebase from 'firebase';
-import { Button, Card, CardSection, Input } from './common';
+import { Button, Card, CardSection, Input, Spinner } from './common';
 
 class LoginForm extends Component {
-    state = { email: '', password: '', error: '' };
+    state = { email: '', password: '', error: '', loading: false };
     
+    //helper method
 onButtonPress() {
     const { email, password } = this.state;
 
-    this.setState({ error: ''})
+    this.setState({ error: '', loading: true })
     
     firebase.auth().signInWithEmailAndPassword(email, password)
+        //.then handles it if succesful, .catch handles it if not succesfull.
+        .then(this.onLoginSuccess.bind(this))
         .catch(() => {
             firebase.auth().createUserWithEmailAndPassword(email, password)
-                .catch(() => {
-                    this.setState({ error: 'Authentication Failed.' })
-                })
+                .then(this.onLoginSuccess.bind(this))
+                .catch(this.onLoginFail.bind(this))
         });
+}
+
+//helper method
+onLoginFail() {
+    this.setState({
+        error: 'Authentication Failed', 
+        loading: false
+    })
+}
+
+//helper method
+onLoginSuccess() {
+    this.setState({ 
+        email: '',
+        password: '',
+        loading: false,
+        error: ''
+    })
+
+}
+
+//helper method
+renderButton () {
+    if (this.state.loading) {
+        return <Spinner size='small' >/</Spinner>
+    } 
+    //behaves like if/else
+    return (
+        <Button onPress={this.onButtonPress.bind(this)}>
+          Log In
+        </Button>
+    );
 }
 
     render () {
@@ -47,9 +81,7 @@ onButtonPress() {
                 </Text>
 
                 <CardSection>
-                    <Button onPress={this.onButtonPress.bind(this)}>
-                        Log In
-                    </Button>
+                    {this.renderButton()}
                 </CardSection>
             </Card>
         )
